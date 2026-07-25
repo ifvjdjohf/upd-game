@@ -4,30 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>大負翁</title>
-  <!-- 連結你剛剛做好的 CSS -->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- 菜單容器 -->
+
   <div class="container" id="menu-container">
-    <!-- 首頁菜單 -->
     <div id="main-menu">
       <h1 class="title">大負翁</h1>
-      <div class="info-box">
-        <strong>💡 遊戲說明</strong>
-        從 10,000 元開始，透過銀行、股票、彩券等多種玩法，看你能賺到多少錢！
-      </div>
       <button class="btn" onclick="goToSaves()">開始遊戲</button>
     </div>
-  </div>
 
-    <!-- 存檔選擇菜單 -->
     <div id="save-menu" class="hidden">
-      <h2 class="save-menu-title">📂 選擇遊戲存檔</h2>
+      <h2 class="save-menu-title">選擇存檔</h2>
       <div id="save-list" class="save-list"></div>
-      <div class="new-save-btn" onclick="createNewSave()" title="建立新存檔">➕</div>
-      <button class="back-btn" onclick="goToMainMenu()">🔙 返回主選單</button>
+      <div class="new-save-btn" onclick="createNewSave()" title="建立新存檔">+</div>
+      <button class="back-btn" onclick="goToMainMenu()">返回主選單</button>
     </div>
+  </div>
 
   <div id="game-view" class="hidden">
     <div class="sidebar">
@@ -255,5 +248,7 @@
   </div>
 
   <script src="script.js"></script>
+</body>
+</html>
 </body>
 </html>
