@@ -284,11 +284,11 @@
       if (isNaN(amount)) return '0';
       
       const units = [
-        { val: 1e27, unit: 'Oct' },
-        { val: 1e24, unit: 'Sep' },
-        { val: 1e21, unit: 'Sex' },
-        { val: 1e18, unit: 'Qui' },
-        { val: 1e15, unit: 'Qua' },
+        { val: 1e27, unit: 'Oc' },
+        { val: 1e24, unit: 'Sp' },
+        { val: 1e21, unit: 'Sx' },
+        { val: 1e18, unit: 'Qi' },
+        { val: 1e15, unit: 'Qa' },
         { val: 1e12, unit: 'T' },
         { val: 1e9, unit: 'B' },
         { val: 1e6, unit: 'M' },
@@ -364,6 +364,60 @@
       };
       input.click();
     }
+    
+    // 在 gameManager.js 中修改或新增這些函式
+
+    function loadGame(index) {
+      currentSaveIndex = index;
+      currentSave = saves[index];
+
+      // 1. 隱藏存檔菜單，顯示遊戲畫面
+      document.getElementById('save-menu').classList.add('hidden');
+      document.getElementById('game-screen').classList.remove('hidden');
+
+      // 2. 更新畫面數值
+      updateGameUI();
+    }
+
+    function updateGameUI() {
+      document.getElementById('current-assets').innerText = '$' + formatMoney(currentSave.money + currentSave.bankDeposit);
+      // 假設財富等級邏輯之後會實作
+      document.getElementById('wealth-level').innerText = 'Lv.1'; 
+    }
+
+    function exitGame() {
+      if (confirm('確定要退出遊戲並回到主選單嗎？')) {
+        // 隱藏遊戲畫面，顯示主選單
+        document.getElementById('game-screen').classList.add('hidden');
+        document.getElementById('main-menu').classList.remove('hidden');
+        currentSave = null;
+      }
+    }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // 頁面加載時初始化
     window.addEventListener('DOMContentLoaded', initApp);
