@@ -36,12 +36,6 @@
       margin-bottom: 2rem;
       color: #ff5252;
       text-shadow: 0 0 15px rgba(255, 82, 82, 0.4);
-      animation: titleGlow 2s ease-in-out infinite;
-    }
-
-    @keyframes titleGlow {
-      0%, 100% { text-shadow: 0 0 15px rgba(255, 82, 82, 0.4); }
-      50% { text-shadow: 0 0 25px rgba(255, 82, 82, 0.8); }
     }
 
     .btn {
@@ -62,20 +56,15 @@
       box-shadow: 0 8px 25px rgba(255, 82, 82, 0.6);
     }
 
-    .btn:active {
-      transform: translateY(-1px);
-    }
-
     .hidden {
       display: none !important;
     }
 
-    /* ============ 存檔菜單樣式 ============ */
+    /* 存檔選單樣式 */
     .save-menu-title {
       font-size: 1.5rem;
       margin-bottom: 1.5rem;
       color: #ddd;
-      font-weight: bold;
     }
 
     .save-list {
@@ -83,33 +72,8 @@
       flex-direction: column;
       gap: 12px;
       margin-bottom: 1.2rem;
-      max-height: 300px;
+      max-height: 250px;
       overflow-y: auto;
-      padding: 4px;
-    }
-
-    /* 自訂捲軸樣式 */
-    .save-list::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    .save-list::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .save-list::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 4px;
-    }
-
-    .save-list::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.4);
-    }
-
-    .empty-state {
-      color: #aaa;
-      margin: 1rem 0;
-      font-size: 0.95rem;
     }
 
     .save-item {
@@ -120,18 +84,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: all 0.2s ease;
-      cursor: pointer;
+      transition: background 0.2s;
     }
 
     .save-item:hover {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: rgba(255, 255, 255, 0.3);
-      transform: translateX(4px);
-    }
-
-    .save-item:active {
-      transform: translateX(2px);
+      background: rgba(255, 255, 255, 0.18);
     }
 
     .save-info {
@@ -143,13 +100,12 @@
     .save-name {
       font-weight: bold;
       font-size: 1.1rem;
-      color: #fff;
-      margin-bottom: 4px;
     }
 
     .save-date {
       font-size: 0.8rem;
       color: #aaa;
+      margin-top: 4px;
     }
 
     .save-actions {
@@ -163,48 +119,35 @@
       border: 1px solid rgba(255, 71, 87, 0.5);
       color: #ff4757;
       border-radius: 8px;
-      padding: 0.4rem 0.8rem;
+      padding: 0.4rem 0.6rem;
       cursor: pointer;
       font-size: 0.85rem;
-      transition: all 0.2s ease;
-      font-weight: bold;
-      white-space: nowrap;
+      transition: all 0.2s;
     }
 
     .delete-btn:hover {
       background: #ff4757;
       color: #fff;
-      transform: scale(1.05);
-    }
-
-    .delete-btn:active {
-      transform: scale(0.98);
     }
 
     .new-save-btn {
       background: rgba(255, 255, 255, 0.05);
       border: 2px dashed rgba(255, 255, 255, 0.3);
-      padding: 1rem;
+      padding: 0.8rem;
       border-radius: 12px;
       cursor: pointer;
-      font-size: 2rem;
+      font-size: 1.8rem;
       color: #34ace0;
       transition: all 0.2s ease;
       display: flex;
       justify-content: center;
       align-items: center;
       margin-bottom: 1.2rem;
-      min-height: 60px;
     }
 
     .new-save-btn:hover {
       background: rgba(52, 172, 224, 0.15);
       border-color: #34ace0;
-      transform: scale(1.02);
-    }
-
-    .new-save-btn:active {
-      transform: scale(0.98);
     }
 
     .back-btn {
@@ -217,7 +160,6 @@
       cursor: pointer;
       transition: all 0.2s ease;
       width: 100%;
-      font-weight: bold;
     }
 
     .back-btn:hover {
@@ -226,77 +168,1016 @@
       border-color: rgba(255, 255, 255, 0.6);
     }
 
-    .back-btn:active {
-      transform: translateY(1px);
-    }
-
-    /* ============ 信息提示樣式 ============ */
-    .info-box {
-      background: rgba(52, 172, 224, 0.1);
-      border: 1px solid rgba(52, 172, 224, 0.3);
-      border-radius: 8px;
-      padding: 0.8rem;
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      color: #34ace0;
-      text-align: left;
-    }
-
-    .info-box strong {
-      display: block;
-      margin-bottom: 0.3rem;
-    }
-
-    /* ============ 響應式設計 ============ */
-    @media (max-width: 600px) {
-      .container {
-        width: 95%;
-        padding: 1.5rem;
-      }
-
-      .title {
-        font-size: 2.5rem;
-        margin-bottom: 1.5rem;
-      }
-
-      .save-list {
-        max-height: 350px;
-      }
-
-      .btn {
-        font-size: 1.1rem;
-        padding: 0.8rem 2rem;
-      }
-    }
-    /*nn--------------------------------------------n*/
-    #game-screen {
-      position: relative;
+    /* ---------------- 遊戲主要介面 ---------------- */
+    #game-view {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100vw;
       height: 100vh;
-      background-color: #f0f0f0; /* 給個背景色 */
+      display: flex;
+      background: #0f0f1d;
     }
 
-    .hud-top-left {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      font-size: 20px;
+    .sidebar {
+      width: 240px;
+      background: rgba(255, 255, 255, 0.03);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 1.2rem;
+      box-sizing: border-box;
+      height: 100vh;
+    }
+
+    .sidebar-top-placeholder {
+      height: 40px;
+      width: 100%;
+    }
+
+    .sidebar-middle {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .money-box {
+      text-align: center;
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      padding: 1.5rem 1rem;
+      border-radius: 16px;
+      width: 100%;
+      box-sizing: border-box;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .money-label {
+      font-size: 0.9rem;
+      color: #ffd700;
+      margin-bottom: 0.6rem;
+      letter-spacing: 1px;
       font-weight: bold;
     }
 
-    .hud-middle-left {
-      position: absolute;
-      top: 50%;
-      left: 20px;
-      transform: translateY(-50%);
-      font-size: 24px;
-      color: #2c3e50;
+    .money-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #ffffff;
+      word-break: break-all;
     }
 
-    .hud-bottom-left {
+    .sidebar-bottom {
+      width: 100%;
+    }
+
+    .exit-btn {
+      width: 100%;
+      background: rgba(255, 71, 87, 0.15);
+      border: 1px solid rgba(255, 71, 87, 0.4);
+      color: #ff4757;
+      padding: 0.8rem;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .exit-btn:hover {
+      background: rgba(255, 71, 87, 0.3);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .grid-container {
+      width: 100%;
+      max-width: 680px;
+      height: 480px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 1.2rem;
+      overflow-y: auto;
+    }
+
+    .grid-container::-webkit-scrollbar {
+      width: 8px;
+    }
+    .grid-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .grid-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      height: 130px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #e0e0e0;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: center;
+      padding: 0.5rem;
+    }
+
+    .grid-card:hover {
+      background: rgba(255, 82, 82, 0.2);
+      border-color: #ff5252;
+      transform: scale(1.03);
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    /* 面板通用樣式 */
+    .game-panel {
+      width: 100%;
+      max-width: 650px;
+      background: rgba(30, 30, 47, 0.95);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* 銀行介面面板 */
+    .bank-panel {
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .bank-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 0.8rem;
+    }
+
+    .bank-title {
+      font-size: 1.5rem;
+      color: #ffd700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .bank-info-box {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .bank-info-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1rem;
+    }
+
+    .bank-timer-box {
+      background: rgba(255, 215, 0, 0.08);
+      border: 1px dashed rgba(255, 215, 0, 0.3);
+      border-radius: 8px;
+      padding: 0.6rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #ffd700;
+    }
+
+    .bank-inputs {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .bank-input {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 0.8rem;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .bank-input:focus {
+      border-color: #ffd700;
+    }
+
+    .bank-action-btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .bank-btn {
+      padding: 0.8rem;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .deposit-btn { background: #2ed573; color: white; }
+    .withdraw-btn { background: #ff4757; color: white; }
+    .bank-btn:hover { opacity: 0.85; }
+
+    /* 股票交易行介面 */
+    .stock-panel {
+      max-width: 800px;
+      height: 520px;
+      border: 1px solid rgba(46, 213, 115, 0.3);
+    }
+
+    .stock-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 0.6rem;
+    }
+
+    .stock-timers {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: #2ed573;
+      background: rgba(46, 213, 115, 0.08);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+    }
+
+    .stock-table-container {
+      flex: 1;
+      overflow-y: auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    .stock-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .stock-table th, .stock-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .stock-table th {
+      background: rgba(255, 255, 255, 0.08);
+      color: #aaa;
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(5px);
+    }
+
+    .stock-action-btn {
+      padding: 0.3rem 0.8rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-right: 4px;
+    }
+
+    .buy-btn { background: #2ed573; color: white; }
+    .sell-btn { background: #ff4757; color: white; }
+    .stock-action-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* ---------------- 彩券刮刮樂 ---------------- */
+    .scratch-panel {
+      border: 1px solid rgba(255, 121, 63, 0.4);
+      align-items: center;
+      position: relative;
+    }
+
+    .scratch-select-box {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .scratch-dropdown {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 121, 63, 0.5);
+      color: #ffd700;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .scratch-dropdown option {
+      background: #1e1e2f;
+      color: #fff;
+    }
+
+    .scratch-card-info {
+      font-size: 0.85rem;
+      color: #aaa;
+      text-align: center;
+      line-height: 1.3;
+      background: rgba(255,255,255,0.05);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      width: 100%;
+    }
+
+    .scratch-card-area {
+      position: relative;
+      width: 340px;
+      height: 190px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      border: 2px solid #ffd700;
+    }
+
+    .scratch-result-bg {
       position: absolute;
-      bottom: 20px;
-      left: 20px;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1f2a38, #000);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .scratch-result-symbols {
+      font-size: 2rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .scratch-result-title {
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    .scratch-result-prize {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #ffd700;
+      margin-top: 0.3rem;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    .scratch-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      touch-action: none;
+    }
+
+    .scratch-btn-group {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    .scratch-buy-btn {
+      flex: 1;
+      padding: 0.8rem;
+      background: #2ed573;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3);
+      transition: transform 0.2s;
+    }
+
+    .scratch-auto-btn {
+      background: #ff793f;
+      box-shadow: 0 4px 15px rgba(255, 121, 63, 0.3);
+    }
+
+    .scratch-batch-btn {
+      background: #a55eea;
+      box-shadow: 0 4px 15px rgba(165, 94, 234, 0.3);
+    }
+
+    .scratch-buy-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .scratch-buy-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* 全螢幕遮罩 (批量處理中提示) */
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 15, 29, 0.92);
+      border-radius: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #ffd700;
+      z-index: 10;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    /* ---------------- D 玩法：拉霸雞 樣式 ---------------- */
+    .slot-panel {
+      max-width: 720px;
+      background: linear-gradient(145deg, #2b1b54, #160f30);
+      border: 2px solid #ffd700;
+    }
+
+    .slot-main-layout {
+      display: flex;
+      gap: 15px;
+      align-items: stretch;
+    }
+
+    .slot-left-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .slot-right-multiplier {
+      width: 150px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 14px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .slot-multiplier-title {
+      font-size: 0.9rem;
+      color: #ffd700;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .slot-multiplier-input-box {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      width: 100%;
+    }
+
+    .slot-multiplier-input {
+      width: 100%;
+      background: #000;
+      border: 1px solid #ffd700;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-align: center;
+      padding: 6px;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .slot-multiplier-quick-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .slot-mult-btn {
+      background: #332554;
+      border: 1px solid rgba(255, 215, 0, 0.4);
+      color: #fff;
+      padding: 6px 0;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+
+    .slot-mult-btn:hover {
+      background: #ffd700;
+      color: #000;
+    }
+
+    .slot-mult-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .slot-free-banner {
+      background: linear-gradient(90deg, #2e7d32, #4caf50);
+      color: #fff;
+      padding: 8px;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 0.95rem;
+      display: none;
+      animation: slotPulse 1.5s infinite;
+    }
+
+    @keyframes slotPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    .slot-reels {
+      background: #000;
+      border: 3px solid #b8860b;
+      border-radius: 14px;
+      display: flex;
+      justify-content: space-around;
+      padding: 15px 10px;
+    }
+
+    .slot-reel {
+      width: 85px;
+      height: 85px;
+      background: #ffffff;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 45px;
+      transition: filter 0.1s;
+    }
+
+    .slot-reel.blur {
+      filter: blur(4px);
+    }
+
+    .slot-bet-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      max-height: 100px;
+      overflow-y: auto;
+      padding: 4px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 10px;
+    }
+
+    .slot-chip {
+      background: #332554;
+      border: 1px solid #ffd700;
+      color: #ffd700;
+      padding: 6px 0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .slot-chip.active {
+      background: #ffd700;
+      color: #000;
+      box-shadow: 0 0 10px rgba(255,215,0,0.5);
+    }
+
+    .slot-chip:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      border-color: #666;
+      color: #888;
+    }
+
+    .slot-spin-btn {
+      width: 100%;
+      background: linear-gradient(180deg, #ff4e50, #f9d423);
+      border: none;
+      color: #000;
+      padding: 12px;
+      font-size: 1.2rem;
+      font-weight: 900;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #b33900;
+      transition: transform 0.1s;
+    }
+
+    .slot-spin-btn.stop-btn {
+      background: linear-gradient(180deg, #ff4757, #ff6b81);
+      box-shadow: 0 4px 0 #b21f2d;
+      color: #fff;
+    }
+
+    .slot-spin-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #b33900;
+    }
+
+    .slot-spin-btn:disabled {
+      background: #555;
+      box-shadow: none;
+      color: #888;
+      cursor: not-allowed;
+    }
+
+    .slot-msg {
+      text-align: center;
+      font-size: 1rem;
+      min-height: 24px;
+      color: #2ed573;
+      font-weight: bold;
+    }
+
+    /* 拉霸機賠率表樣式 */
+    .slot-payout-table {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 10px;
+      padding: 8px;
+      margin-top: 4px;
+    }
+
+    .slot-payout-title {
+      font-size: 0.85rem;
+      color: #ffd700;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .slot-payout-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    .slot-payout-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 4px;
+      border-radius: 6px;
+    }
+
+    /* ---------------- E 玩法：俄羅斯輪盤 樣式 ---------------- */
+    .roulette-panel {
+      max-width: 550px;
+      background: linear-gradient(145deg, #2c0b0e, #110406);
+      border: 2px solid #ff4757;
+      align-items: center;
+      text-align: center;
+    }
+
+    .roulette-gun-container {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 3px solid #ff4757;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: inset 0 0 20px rgba(255, 71, 87, 0.5);
+      margin: 10px 0;
+    }
+
+    .roulette-gun-icon {
+      font-size: 80px;
+      transition: transform 0.3s ease;
+    }
+
+    .roulette-gun-icon.spin {
+      animation: gunSpin 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .roulette-gun-icon.bang {
+      animation: gunBang 0.2s ease-in-out;
+    }
+
+    @keyframes gunSpin {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(720deg) scale(1.2); }
+      100% { transform: rotate(1080deg) scale(1); }
+    }
+
+    @keyframes gunBang {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.4) translate(-10px, -10px); }
+      100% { transform: scale(1); }
+    }
+
+    .roulette-status-box {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 0.8rem 1.2rem;
+      width: 100%;
+    }
+
+    .roulette-status-title {
+      font-size: 1rem;
+      color: #aaa;
+    }
+
+    .roulette-status-val {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #ff4757;
+      margin-top: 4px;
+    }
+
+    .roulette-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .roulette-btn {
+      width: 100%;
+      padding: 0.9rem;
+      border: none;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .roulette-shoot-btn {
+      background: linear-gradient(45deg, #ff4757, #ff6b81);
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+    }
+
+    .roulette-shoot-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 71, 87, 0.6);
+    }
+
+    .roulette-stop-btn {
+      background: linear-gradient(45deg, #2ed573, #1e90ff);
+      color: white;
+      box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3);
+    }
+
+    .roulette-stop-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .roulette-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    /* ---------------- F 玩法：搖花骰 樣式 ---------------- */
+    .dice-panel {
+      border: 2px solid #a55eea;
+      background: linear-gradient(145deg, #241432, #100818);
+    }
+
+    .dice-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .dice-count-select {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .dice-count-btn {
+      flex: 1;
+      padding: 0.6rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+
+    .dice-count-btn.active {
+      background: #a55eea;
+      border-color: #d1d8e0;
+      box-shadow: 0 0 10px rgba(165, 94, 234, 0.5);
+    }
+
+    .dice-display-area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      min-height: 90px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .dice-box {
+      width: 65px;
+      height: 65px;
+      background: #fff;
+      color: #1e1e2f;
+      font-size: 2.2rem;
+      font-weight: bold;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    }
+
+    .dice-box.rolling {
+      animation: diceRoll 0.1s infinite;
+    }
+
+    @keyframes diceRoll {
+      0% { transform: rotate(0deg); }
+      50% { transform: rotate(180deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .bet-grid-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      max-height: 110px;
+      overflow-y: auto;
+      padding: 4px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 10px;
+    }
+
+    .custom-bet-box {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* ---------------- G 玩法：21點 樣式 ---------------- */
+    .blackjack-panel {
+      border: 2px solid #20bf6b;
+      background: linear-gradient(145deg, #0b2b1a, #05140c);
+    }
+
+    .bj-area {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 14px;
+    }
+
+    .bj-hand-title {
+      font-size: 0.95rem;
+      color: #20bf6b;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .bj-cards {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      min-height: 65px;
+    }
+
+    .bj-card {
+      width: 45px;
+      height: 65px;
+      background: white;
+      color: #000;
+      border-radius: 6px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.1rem;
+      font-weight: bold;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+    }
+
+    .bj-card.red {
+      color: #ff3838;
+    }
+
+    .bj-card.hidden-card {
+      background: linear-gradient(135deg, #4b6584, #1e272e);
+      color: transparent;
+      border: 2px solid #fff;
+    }
+
+    /* ---------------- H 玩法：陽壽掏金 樣式 ---------------- */
+    .lifespan-panel {
+      border: 2px solid #e1b12c;
+      background: linear-gradient(145deg, #3d2b0f, #191206);
+    }
+
+    .lifespan-boxes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 15px 0;
+    }
+
+    .lifespan-box-card {
+      height: 90px;
+      background: rgba(255, 215, 0, 0.1);
+      border: 2px dashed #e1b12c;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.8rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .lifespan-box-card:hover {
+      background: rgba(255, 215, 0, 0.25);
+      transform: scale(1.04);
+    }
+
+    .lifespan-box-card.opened {
+      border-style: solid;
+      background: rgba(0, 0, 0, 0.5);
+      cursor: default;
+      transform: none;
+    }
+
+    .lifespan-box-card.win {
+      border-color: #2ed573;
+      color: #2ed573;
+    }
+
+    .lifespan-box-card.lose {
+      border-color: #ff4757;
+      color: #ff4757;
+    }
+
+    .lifespan-box-val {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-top: 4px;
     }
 
 
