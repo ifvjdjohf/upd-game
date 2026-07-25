@@ -1,4 +1,5 @@
-// 預設 30 家公司設計
+  <script>
+    // 預設 30 家公司設計
     const INITIAL_STOCKS = [
       { id: 1, name: '肯德基', basePrice: 100 },
       { id: 2, name: '麥當勞', basePrice: 300 },
@@ -977,6 +978,14 @@
       }
     }
 
+    function handleSlotButtonClick() {
+      if (!isSlotSpinning) {
+        startSlotSpin();
+      } else {
+        stopNextSlotReel();
+      }
+    }
+
     function startSlotSpin() {
       const baseBet = COMMON_BET_LEVELS[slotBetIndex].value;
       const totalBet = baseBet * slotMultiplier;
@@ -1124,5 +1133,581 @@
     function resetRouletteGame() {
       rouletteRound = 0;
       bulletPosition = Math.floor(Math.random() * 6);
+      isRouletteAnimating = false;
 
-window.addEventListener('DOMContentLoaded', initApp);
+      const statusEl = document.getElementById('roulette-status-text');
+      const shootBtn = document.getElementById('roulette-shoot-btn');
+      const stopBtn = document.getElementById('roulette-stop-btn');
+      const gunIcon = document.getElementById('roulette-gun-icon');
+
+      statusEl.innerText = '準備開始本輪遊戲 (彈匣: 1/6 子彈)';
+      statusEl.style.color = '#ff4757';
+      gunIcon.innerText = '🔫';
+      
+      shootBtn.innerText = '扣動第 1 槍 💥';
+      shootBtn.disabled = false;
+      stopBtn.classList.add('hidden');
+    }
+
+    function handleRouletteShoot() {
+      if (isRouletteAnimating) return;
+      isRouletteAnimating = true;
+
+      const shootBtn = document.getElementById('roulette-shoot-btn');
+      const stopBtn = document.getElementById('roulette-stop-btn');
+      const statusEl = document.getElementById('roulette-status-text');
+      const gunIcon = document.getElementById('roulette-gun-icon');
+
+      shootBtn.disabled = true;
+      stopBtn.disabled = true;
+
+      gunIcon.classList.add('spin');
+      statusEl.innerText = '轉動左輪轉輪中...';
+      statusEl.style.color = '#ffd700';
+
+      setTimeout(() => {
+        gunIcon.classList.remove('spin');
+        gunIcon.classList.add('bang');
+
+        setTimeout(() => {
+          gunIcon.classList.remove('bang');
+          isRouletteAnimating = false;
+
+          if (rouletteRound === 0) {
+            if (bulletPosition === 0) {
+              gunIcon.innerText = '💥';
+              statusEl.innerText = '💥 砰！你中槍死亡了！(金錢及存款 /2)';
+              statusEl.style.color = '#ff4757';
+
+              currentSave.money = Math.floor(currentSave.money / 2);
+              currentSave.bankDeposit = Math.floor(currentSave.bankDeposit / 2);
+              saveDataToStorage();
+              updateUI();
+
+              shootBtn.innerText = '再試一次 (重新載彈) 🔄';
+              shootBtn.disabled = false;
+              rouletteRound = -1;
+            } else {
+              rouletteRound = 1;
+              gunIcon.innerText = '🛡️';
+              statusEl.innerText = '咔... 幸運存活！你可以選擇結束領取 2 倍，或挑戰第 2 槍 (3倍/懲罰5分之1)！';
+              statusEl.style.color = '#2ed573';
+
+              shootBtn.innerText = '繼續挑戰第 2 槍 💥';
+              shootBtn.disabled = false;
+              stopBtn.innerText = '結束本輪 (資產 x2) 💰';
+              stopBtn.classList.remove('hidden');
+              stopBtn.disabled = false;
+            }
+          } else if (rouletteRound === 1) {
+            if (bulletPosition === 1) {
+              gunIcon.innerText = '💥';
+              statusEl.innerText = '💥 砰！第 2 槍不幸中槍死亡！(金錢及存款 /5)';
+              statusEl.style.color = '#ff4757';
+
+              currentSave.money = Math.floor(currentSave.money / 5);
+              currentSave.bankDeposit = Math.floor(currentSave.bankDeposit / 5);
+              saveDataToStorage();
+              updateUI();
+
+              shootBtn.innerText = '再試一次 (重新載彈) 🔄';
+              shootBtn.disabled = false;
+              stopBtn.classList.add('hidden');
+              rouletteRound = -1;
+            } else {
+              rouletteRound = 2;
+              gunIcon.innerText = '👑';
+              statusEl.innerText = '🎉 咔... 再次存活！極限挑戰成功！資產改為 3 倍！';
+              statusEl.style.color = '#ffd700';
+
+              currentSave.money = Math.floor(currentSave.money * 3);
+              currentSave.bankDeposit = Math.floor(currentSave.bankDeposit * 3);
+              saveDataToStorage();
+              updateUI();
+
+              shootBtn.innerText = '開啟新一輪 🔄';
+              shootBtn.disabled = false;
+              stopBtn.classList.add('hidden');
+            }
+          } else {
+            resetRouletteGame();
+          }
+        }, 300);
+      }, 600);
+    }
+
+    function handleRouletteStop() {
+      if (isRouletteAnimating) return;
+
+      const statusEl = document.getElementById('roulette-status-text');
+      const shootBtn = document.getElementById('roulette-shoot-btn');
+      const stopBtn = document.getElementById('roulette-stop-btn');
+      const gunIcon = document.getElementById('roulette-gun-icon');
+
+      if (rouletteRound === 1) {
+        currentSave.money = Math.floor(currentSave.money * 2);
+        currentSave.bankDeposit = Math.floor(currentSave.bankDeposit * 2);
+        saveDataToStorage();
+        updateUI();
+
+        gunIcon.innerText = '💰';
+        statusEl.innerText = '🎉 順利見好就收！當前現金與銀行存款均已加倍 (*2)！';
+        statusEl.style.color = '#2ed573';
+
+        shootBtn.innerText = '開啟新一輪 🔄';
+        stopBtn.classList.add('hidden');
+        rouletteRound = -1;
+      }
+    }
+
+    // ---------------- F 玩法：搖花骰 邏輯 ----------------
+    function initDiceGame() {
+      const container = document.getElementById('dice-chip-grid');
+      container.innerHTML = '';
+      COMMON_BET_LEVELS.forEach((level, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `slot-chip ${level.value === diceBetAmount ? 'active' : ''}`;
+        btn.innerText = level.label;
+        btn.onclick = () => selectDiceBet(level.value, btn);
+        container.appendChild(btn);
+      });
+      updateDiceWinPreview();
+    }
+
+    function setDiceCount(count) {
+      if (isDiceRolling) return;
+      diceCount = count;
+      document.querySelectorAll('.dice-count-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(`dice-cnt-${count}`).classList.add('active');
+
+      const displayArea = document.getElementById('dice-display-area');
+      displayArea.innerHTML = '';
+      for (let i = 0; i < diceCount; i++) {
+        const box = document.createElement('div');
+        box.className = 'dice-box';
+        box.innerText = '?';
+        displayArea.appendChild(box);
+      }
+      updateDiceWinPreview();
+    }
+
+    function selectDiceBet(amount, element) {
+      if (isDiceRolling) return;
+      diceBetAmount = amount;
+      document.getElementById('dice-custom-bet').value = '';
+      document.querySelectorAll('#dice-chip-grid .slot-chip').forEach(c => c.classList.remove('active'));
+      if (element) element.classList.add('active');
+      updateDiceWinPreview();
+    }
+
+    function onDiceCustomBetInput() {
+      if (isDiceRolling) return;
+      const val = Number(document.getElementById('dice-custom-bet').value);
+      if (val > 0) {
+        diceBetAmount = val;
+        document.querySelectorAll('#dice-chip-grid .slot-chip').forEach(c => c.classList.remove('active'));
+      }
+      updateDiceWinPreview();
+    }
+
+    function updateDiceWinPreview() {
+      const prob = Math.pow(1/6, diceCount - 1);
+      const winPayout = Math.floor((diceBetAmount / prob) * 0.9);
+      document.getElementById('dice-win-prize-preview').innerText = `預計勝獲：$${formatMoney(winPayout)}`;
+    }
+
+    function rollDice() {
+      if (isDiceRolling) return;
+      if (currentSave.money < diceBetAmount) {
+        alert('手上現金不足！');
+        return;
+      }
+
+      currentSave.money -= diceBetAmount;
+      saveDataToStorage();
+      updateUI();
+
+      isDiceRolling = true;
+      document.getElementById('dice-roll-btn').disabled = true;
+      const msg = document.getElementById('dice-msg');
+      msg.innerText = '🎲 骰子滾動中...';
+      msg.style.color = '#fff';
+
+      const diceBoxes = document.querySelectorAll('#dice-display-area .dice-box');
+      diceBoxes.forEach(box => box.classList.add('rolling'));
+
+      setTimeout(() => {
+        const prob = Math.pow(1/6, diceCount - 1);
+        const winPayout = Math.floor((diceBetAmount / prob) * 0.9);
+        const isWin = Math.random() < prob;
+
+        diceBoxes.forEach(box => box.classList.remove('rolling'));
+
+        if (isWin) {
+          const val = Math.floor(Math.random() * 6) + 1;
+          diceBoxes.forEach(box => box.innerText = val);
+          currentSave.money += winPayout;
+          saveDataToStorage();
+          updateUI();
+          msg.innerText = `🎉 恭喜獲勝！搖出全 ${val} 點，獲得 $${formatMoney(winPayout)}！`;
+          msg.style.color = '#ffd700';
+        } else {
+          let diceVals = [];
+          for (let i = 0; i < diceCount; i++) {
+            diceVals.push(Math.floor(Math.random() * 6) + 1);
+          }
+          if (diceVals.every(v => v === diceVals[0])) {
+            diceVals[0] = (diceVals[0] % 6) + 1;
+          }
+          diceBoxes.forEach((box, i) => box.innerText = diceVals[i]);
+          msg.innerText = '😢 點數不一致，再試一次吧！';
+          msg.style.color = '#aaa';
+        }
+
+        isDiceRolling = false;
+        document.getElementById('dice-roll-btn').disabled = false;
+      }, 1000);
+    }
+
+    // ---------------- G 玩法：21點 邏輯 ----------------
+    function initBlackjackGame() {
+      const container = document.getElementById('bj-chip-grid');
+      container.innerHTML = '';
+      COMMON_BET_LEVELS.forEach((level, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `slot-chip ${level.value === bjBetAmount ? 'active' : ''}`;
+        btn.innerText = level.label;
+        btn.onclick = () => selectBjBet(level.value, btn);
+        container.appendChild(btn);
+      });
+      updateBjWinPreview();
+    }
+
+    function selectBjBet(amount, element) {
+      if (isBjGameActive) return;
+      bjBetAmount = amount;
+      document.getElementById('bj-custom-bet').value = '';
+      document.querySelectorAll('#bj-chip-grid .slot-chip').forEach(c => c.classList.remove('active'));
+      if (element) element.classList.add('active');
+      updateBjWinPreview();
+    }
+
+    function onBjCustomBetInput() {
+      if (isBjGameActive) return;
+      const val = Number(document.getElementById('bj-custom-bet').value);
+      if (val > 0) {
+        bjBetAmount = val;
+        document.querySelectorAll('#bj-chip-grid .slot-chip').forEach(c => c.classList.remove('active'));
+      }
+      updateBjWinPreview();
+    }
+
+    function updateBjWinPreview() {
+      document.getElementById('bj-win-prize-preview').innerText = `贏了可得：$${formatMoney(bjBetAmount * 2)}`;
+    }
+
+    function createBjDeck() {
+      const suits = ['♠', '♥', '♦', '♣'];
+      const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+      let deck = [];
+      for (let s of suits) {
+        for (let v of values) {
+          deck.push({ suit: s, value: v });
+        }
+      }
+      return deck.sort(() => Math.random() - 0.5);
+    }
+
+    function calculateBjScore(hand) {
+      let score = 0;
+      let aces = 0;
+
+      for (let card of hand) {
+        if (card.value === 'A') {
+          aces += 1;
+          score += 11;
+        } else if (['J', 'Q', 'K'].includes(card.value)) {
+          score += 10;
+        } else {
+          score += parseInt(card.value);
+        }
+      }
+
+      while (score > 21 && aces > 0) {
+        score -= 10;
+        aces -= 1;
+      }
+
+      return score;
+    }
+
+    function renderBjHand(hand, elementId, hideFirstCard = false) {
+      const container = document.getElementById(elementId);
+      container.innerHTML = '';
+      hand.forEach((card, idx) => {
+        const div = document.createElement('div');
+        if (hideFirstCard && idx === 0) {
+          div.className = 'bj-card hidden-card';
+          div.innerText = '?';
+        } else {
+          const isRed = ['♥', '♦'].includes(card.suit);
+          div.className = `bj-card ${isRed ? 'red' : ''}`;
+          div.innerText = `${card.suit}${card.value}`;
+        }
+        container.appendChild(div);
+      });
+    }
+
+    function startBlackjackGame() {
+      if (isBjGameActive) return;
+      if (currentSave.money < bjBetAmount) {
+        alert('手上現金不足！');
+        return;
+      }
+
+      currentSave.money -= bjBetAmount;
+      saveDataToStorage();
+      updateUI();
+
+      isBjGameActive = true;
+      bjDeck = createBjDeck();
+      bjPlayerHand = [bjDeck.pop(), bjDeck.pop()];
+      bjDealerHand = [bjDeck.pop(), bjDeck.pop()];
+
+      document.getElementById('bj-bet-controls').classList.add('hidden');
+      document.getElementById('bj-action-controls').classList.remove('hidden');
+
+      renderBjHand(bjDealerHand, 'bj-dealer-cards', true);
+      renderBjHand(bjPlayerHand, 'bj-player-cards', false);
+
+      document.getElementById('bj-dealer-score').innerText = '?';
+      const playerScore = calculateBjScore(bjPlayerHand);
+      document.getElementById('bj-player-score').innerText = playerScore;
+
+      const msg = document.getElementById('bj-msg');
+      msg.innerText = '請選擇要牌或停牌';
+      msg.style.color = '#20bf6b';
+
+      if (playerScore === 21) {
+        bjStand();
+      }
+    }
+
+    function bjHit() {
+      if (!isBjGameActive) return;
+      bjPlayerHand.push(bjDeck.pop());
+      renderBjHand(bjPlayerHand, 'bj-player-cards', false);
+
+      const score = calculateBjScore(bjPlayerHand);
+      document.getElementById('bj-player-score').innerText = score;
+
+      if (score > 21) {
+        endBjGame(false, '💥 點數爆牌 (Bust)，你輸了！');
+      } else if (score === 21) {
+        bjStand();
+      }
+    }
+
+    function bjStand() {
+      if (!isBjGameActive) return;
+
+      renderBjHand(bjDealerHand, 'bj-dealer-cards', false);
+      let dealerScore = calculateBjScore(bjDealerHand);
+
+      while (dealerScore < 17) {
+        bjDealerHand.push(bjDeck.pop());
+        dealerScore = calculateBjScore(bjDealerHand);
+      }
+
+      renderBjHand(bjDealerHand, 'bj-dealer-cards', false);
+      document.getElementById('bj-dealer-score').innerText = dealerScore;
+
+      const playerScore = calculateBjScore(bjPlayerHand);
+
+      if (dealerScore > 21) {
+        endBjGame(true, '🎉 莊家爆牌！你贏得了比賽！');
+      } else if (playerScore > dealerScore) {
+        endBjGame(true, '🎉 你的點數大於莊家！獲得勝利！');
+      } else if (playerScore < dealerScore) {
+        endBjGame(false, '😢 莊家點數較大，你輸了！');
+      } else {
+        endBjGame(null, '🤝 平局！退還下注資金。');
+      }
+    }
+
+    function endBjGame(isPlayerWin, message) {
+      isBjGameActive = false;
+      const msg = document.getElementById('bj-msg');
+      msg.innerText = message;
+
+      if (isPlayerWin === true) {
+        const winAmount = bjBetAmount * 2;
+        currentSave.money += winAmount;
+        msg.style.color = '#ffd700';
+      } else if (isPlayerWin === null) {
+        currentSave.money += bjBetAmount;
+        msg.style.color = '#34ace0';
+      } else {
+        msg.style.color = '#ff4757';
+      }
+
+      saveDataToStorage();
+      updateUI();
+
+      document.getElementById('bj-action-controls').classList.add('hidden');
+      document.getElementById('bj-bet-controls').classList.remove('hidden');
+    }
+
+    // ---------------- H 玩法：陽壽掏金 邏輯 ----------------
+    function initLifespanGame() {
+      const container = document.getElementById('lifespan-chip-grid');
+      container.innerHTML = '';
+      COMMON_BET_LEVELS.forEach((level, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `slot-chip ${level.value === lifespanBetAmount ? 'active' : ''}`;
+        btn.innerText = level.label;
+        btn.onclick = () => selectLifespanBet(level.value, btn);
+        container.appendChild(btn);
+      });
+      resetLifespanGame();
+    }
+
+    function selectLifespanBet(amount, element) {
+      if (isLifespanActive) return;
+      lifespanBetAmount = amount;
+      document.getElementById('lifespan-custom-bet').value = '';
+      document.querySelectorAll('#lifespan-chip-grid .slot-chip').forEach(c => c.classList.remove('active'));
+      if (element) element.classList.add('active');
+    }
+
+    function onLifespanCustomBetInput() {
+      if (isLifespanActive) return;
+      const val = Number(document.getElementById('lifespan-custom-bet').value);
+      if (val > 0) {
+        lifespanBetAmount = val;
+        document.querySelectorAll('#lifespan-chip-grid .slot-chip').forEach(c => c.classList.remove('active'));
+      }
+    }
+
+    function resetLifespanGame() {
+      isLifespanActive = false;
+      lifespanBoxes = [];
+      
+      const grid = document.getElementById('lifespan-boxes-grid');
+      grid.innerHTML = '';
+
+      for (let i = 0; i < 9; i++) {
+        const box = document.createElement('div');
+        box.className = 'lifespan-box-card';
+        box.innerHTML = '📦';
+        grid.appendChild(box);
+      }
+
+      document.getElementById('lifespan-start-btn').disabled = false;
+      document.getElementById('lifespan-custom-bet').disabled = false;
+      document.querySelectorAll('#lifespan-chip-grid .slot-chip').forEach(b => b.disabled = false);
+
+      const msg = document.getElementById('lifespan-msg');
+      msg.innerText = '請選擇/輸入下注金額並點擊【開始下注】擺下寶箱';
+      msg.style.color = '#e1b12c';
+    }
+
+    function startLifespanGame() {
+      if (isLifespanActive) return;
+
+      if (currentSave.money < lifespanBetAmount) {
+        alert('手上現金不足！');
+        return;
+      }
+
+      currentSave.money -= lifespanBetAmount;
+      saveDataToStorage();
+      updateUI();
+
+      isLifespanActive = true;
+
+      // 倍率與空箱配置：0.3, 0.5, 0.7, 1, 1.45, 15 (各一個)，0 (三個)
+      const multipliers = [0.3, 0.5, 0.7, 1, 1.45, 15, 0, 0, 0];
+      // 隨機打亂
+      lifespanBoxes = multipliers.sort(() => Math.random() - 0.5);
+
+      document.getElementById('lifespan-start-btn').disabled = true;
+      document.getElementById('lifespan-custom-bet').disabled = true;
+      document.querySelectorAll('#lifespan-chip-grid .slot-chip').forEach(b => b.disabled = true);
+
+      renderLifespanInteractiveBoxes();
+
+      const msg = document.getElementById('lifespan-msg');
+      msg.innerText = '⚰️ 9 個寶箱已擺下，請點擊選擇 1 個打開！';
+      msg.style.color = '#ffd700';
+    }
+
+    function renderLifespanInteractiveBoxes() {
+      const grid = document.getElementById('lifespan-boxes-grid');
+      grid.innerHTML = '';
+
+      lifespanBoxes.forEach((mult, idx) => {
+        const box = document.createElement('div');
+        box.className = 'lifespan-box-card';
+        box.innerHTML = '📦';
+        box.onclick = () => openLifespanBox(idx);
+        grid.appendChild(box);
+      });
+    }
+
+    function openLifespanBox(selectedIndex) {
+      if (!isLifespanActive) return;
+      isLifespanActive = false; // 開啟後該局結束
+
+      const selectedMult = lifespanBoxes[selectedIndex];
+      const winAmount = Math.floor(lifespanBetAmount * selectedMult);
+
+      if (winAmount > 0) {
+        currentSave.money += winAmount;
+        saveDataToStorage();
+        updateUI();
+      }
+
+      const grid = document.getElementById('lifespan-boxes-grid');
+      grid.innerHTML = '';
+
+      lifespanBoxes.forEach((mult, idx) => {
+        const box = document.createElement('div');
+        const isSelected = idx === selectedIndex;
+
+        if (mult > 0) {
+          box.className = `lifespan-box-card opened win ${isSelected ? 'selected' : ''}`;
+          box.innerHTML = `🎁<div class="lifespan-box-val">${mult}x</div>`;
+        } else {
+          box.className = `lifespan-box-card opened lose ${isSelected ? 'selected' : ''}`;
+          box.innerHTML = `💀<div class="lifespan-box-val">0x</div>`;
+        }
+
+        if (isSelected) {
+          box.style.borderWidth = '3px';
+          box.style.boxShadow = '0 0 15px #ffd700';
+        }
+
+        grid.appendChild(box);
+      });
+
+      const msg = document.getElementById('lifespan-msg');
+      if (selectedMult === 0) {
+        msg.innerText = `💀 耗盡陽壽！一無所獲！虧損 -$${formatMoney(lifespanBetAmount)}`;
+        msg.style.color = '#ff4757';
+      } else if (selectedMult < 1) {
+        msg.innerText = `⚠️ 選擇了 ${selectedMult}x 寶箱，收回 $${formatMoney(winAmount)}`;
+        msg.style.color = '#ff793f';
+      } else {
+        msg.innerText = `🎉 幸運天降！選擇了 ${selectedMult}x 寶箱，贏得 $${formatMoney(winAmount)}！`;
+        msg.style.color = '#2ed573';
+      }
+
+      // 恢復按鈕供下一局使用
+      setTimeout(() => {
+        document.getElementById('lifespan-start-btn').disabled = false;
+        document.getElementById('lifespan-custom-bet').disabled = false;
+        document.querySelectorAll('#lifespan-chip-grid .slot-chip').forEach(b => b.disabled = false);
+      }, 1000);
+    }
+  </script>
