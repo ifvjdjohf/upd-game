@@ -268,4 +268,40 @@
         padding: 0.8rem 2rem;
       }
     }
+    /*nn--------------------------------------------n*/
+    #game-screen {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background-color: #f0f0f0; /* 給個背景色 */
+    }
+
+    .hud-top-left {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .hud-middle-left {
+      position: absolute;
+      top: 50%;
+      left: 20px;
+      transform: translateY(-50%);
+      font-size: 24px;
+      color: #2c3e50;
+    }
+
+    .hud-bottom-left {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+    }
+
+
+
+
+
+
   </style>
