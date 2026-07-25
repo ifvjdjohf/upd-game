@@ -27,6 +27,23 @@
       <div class="new-save-btn" onclick="createNewSave()" title="建立新存檔">➕</div>
       <button class="back-btn" onclick="goToMainMenu()">🔙 返回主選單</button>
     </div>
+    <!-- 在這裡新增遊戲畫面 ----------------------------------------------------------------------->
+    <div id="game-screen" class="hidden">
+      <!-- 左上：財富等級 -->
+      <div class="hud-top-left">
+        財富等級: <span id="wealth-level">Lv.1</span>
+      </div>
+
+      <!-- 左中：當前資產 -->
+      <div class="hud-middle-left">
+        當前資產: <span id="current-assets">$0</span>
+      </div>
+
+      <!-- 左下：退出遊戲 -->
+      <div class="hud-bottom-left">
+        <button onclick="exitGame()">退出遊戲</button>
+      </div>
+    </div>
   </div>
 
   <!-- 連結你剛剛做好的 JS -->
