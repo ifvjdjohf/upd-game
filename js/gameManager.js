@@ -1,4 +1,3 @@
- <script>
     // ========== 資料管理 ==========
     let saves = JSON.parse(localStorage.getItem('monopoly_saves')) || [];
     let currentSave = null;
@@ -368,4 +367,4 @@
 
     // 頁面加載時初始化
     window.addEventListener('DOMContentLoaded', initApp);
-  </script>
+
