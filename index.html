@@ -4,16 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>大負翁</title>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <div class="container" id="menu-container">
+    <!-- 主選單 -->
     <div id="main-menu">
       <h1 class="title">大負翁</h1>
       <button class="btn" onclick="goToSaves()">開始遊戲</button>
     </div>
 
+    <!-- 存檔選擇畫面 -->
     <div id="save-menu" class="hidden">
       <h2 class="save-menu-title">選擇存檔</h2>
       <div id="save-list" class="save-list"></div>
@@ -22,7 +23,9 @@
     </div>
   </div>
 
+  <!-- 遊戲主要畫面 -->
   <div id="game-view" class="hidden">
+    <!-- 左側邊欄 -->
     <div class="sidebar">
       <div class="sidebar-top-placeholder"></div>
       <div class="sidebar-middle">
@@ -36,16 +39,20 @@
       </div>
     </div>
 
+    <!-- 中間主要內容區域 -->
     <div class="main-content">
+      <!-- 1. 九宮格選單 -->
       <div class="grid-container" id="grid-view">
         <div class="game-grid" id="game-grid"></div>
       </div>
 
+      <!-- 2. A 玩法：銀行介面 -->
       <div class="game-panel bank-panel hidden" id="bank-view">
         <div class="bank-header">
           <div class="bank-title">🏦 中央銀行</div>
           <button class="back-btn" style="width: auto; padding: 0.4rem 1rem;" onclick="closePanel('bank-view')">返回選單</button>
         </div>
+
         <div class="bank-info-box">
           <div class="bank-info-row">
             <span>銀行總存款：</span>
@@ -56,18 +63,22 @@
             <span style="color: #2ed573;">每 2 分鐘 +5% (*1.05)</span>
           </div>
         </div>
+
         <div class="bank-timer-box">
           距離下一次結算利息剩餘：<strong id="bank-timer-display">03:00</strong>
         </div>
+
         <div class="bank-inputs">
           <input type="number" id="bank-amount-input" class="bank-input" placeholder="請輸入金額 (必須為正數)" min="1">
         </div>
+
         <div class="bank-action-btns">
           <button class="bank-btn deposit-btn" onclick="handleDeposit()">存入金額</button>
           <button class="bank-btn withdraw-btn" onclick="handleWithdraw()">取出金額</button>
         </div>
       </div>
 
+      <!-- 3. B 玩法：股票交易行 -->
       <div class="game-panel stock-panel hidden" id="stock-view">
         <div class="stock-header">
           <h2 style="color: #2ed573; font-size: 1.4rem;">📈 股票交易行</h2>
@@ -77,26 +88,41 @@
           </div>
           <button class="back-btn" style="width: auto; padding: 0.4rem 1rem;" onclick="closePanel('stock-view')">返回選單</button>
         </div>
+
         <div class="stock-table-container">
           <table class="stock-table">
             <thead>
-              <tr><th>公司名稱</th><th>當前股價</th><th>持有張數</th><th>市場可購張數</th><th>操作</th></tr>
+              <tr>
+                <th>公司名稱</th>
+                <th>當前股價</th>
+                <th>持有張數</th>
+                <th>市場可購張數</th>
+                <th>操作</th>
+              </tr>
             </thead>
             <tbody id="stock-table-body"></tbody>
           </table>
         </div>
       </div>
 
+      <!-- 4. C 玩法：彩券刮刮樂 -->
       <div class="game-panel scratch-panel hidden" id="scratch-view">
-        <div id="scratch-loading-overlay" class="loading-overlay hidden">處理中請稍後...</div>
+        <!-- 批量處理中遮罩 -->
+        <div id="scratch-loading-overlay" class="loading-overlay hidden">
+          處理中請稍後...
+        </div>
+
         <div class="bank-header" style="width: 100%;">
           <div class="bank-title" style="color: #ff793f;">🎟️ 彩券刮刮樂</div>
           <button class="back-btn" style="width: auto; padding: 0.4rem 1rem;" onclick="closePanel('scratch-view')">返回選單</button>
         </div>
+
         <div class="scratch-select-box">
           <select id="scratch-type-select" class="scratch-dropdown" onchange="onScratchSelectChange(this.value)"></select>
         </div>
+
         <div class="scratch-card-info" id="scratch-card-desc">載入彩券資訊中...</div>
+
         <div class="scratch-card-area">
           <div class="scratch-result-bg">
             <div class="scratch-result-symbols" id="scratch-card-symbols">🪙 🥉 💰</div>
@@ -105,6 +131,7 @@
           </div>
           <canvas id="scratch-canvas" class="scratch-canvas" width="340" height="190"></canvas>
         </div>
+
         <div class="scratch-btn-group">
           <button class="scratch-buy-btn" id="scratch-buy-btn" onclick="buyScratchCard()">購買 ($1k)</button>
           <button class="scratch-buy-btn scratch-auto-btn" id="scratch-auto-btn" onclick="autoScratchCard()" disabled>一鍵刮開</button>
@@ -112,23 +139,33 @@
         </div>
       </div>
 
+      <!-- 5. D 玩法：拉霸雞 🎰 -->
       <div class="game-panel slot-panel hidden" id="slot-view">
         <div class="bank-header" style="width: 100%;">
           <div class="bank-title" style="color: #ffd700;">🎰 拉霸雞</div>
           <button class="back-btn" style="width: auto; padding: 0.4rem 1rem;" onclick="closePanel('slot-view')">返回選單</button>
         </div>
-        <div id="slot-free-banner" class="slot-free-banner">🍀 幸運狂歡中！免費次數：<span id="slot-free-count">0</span></div>
+
+        <div id="slot-free-banner" class="slot-free-banner">
+          🍀 幸運狂歡中！免費次數：<span id="slot-free-count">0</span>
+        </div>
+
         <div class="slot-main-layout">
+          <!-- 左側核心轉盤與籌碼區 -->
           <div class="slot-left-area">
             <div class="slot-reels">
               <div class="slot-reel" id="slot-reel1">🐔</div>
               <div class="slot-reel" id="slot-reel2">🐔</div>
               <div class="slot-reel" id="slot-reel3">🐔</div>
             </div>
+
             <div style="font-size: 12px; color: #aaa;">選擇基礎下注金額：</div>
             <div class="slot-bet-grid" id="slot-chips-container"></div>
+
             <button id="slot-spin-btn" class="slot-spin-btn" onclick="handleSlotButtonClick()">SPIN!</button>
           </div>
+
+          <!-- 右側倍率選擇區 -->
           <div class="slot-right-multiplier">
             <div class="slot-multiplier-title">⚡ 倍率選擇</div>
             <div class="slot-multiplier-input-box">
@@ -143,36 +180,45 @@
             </div>
           </div>
         </div>
+
         <div id="slot-msg" class="slot-msg">祝你好運！</div>
+
+        <!-- 功能五：拉霸機賠率顯示面板 -->
         <div class="slot-payout-table">
           <div class="slot-payout-title">🏆 三相同圖案獎勵倍率表</div>
           <div class="slot-payout-grid" id="slot-payout-grid"></div>
         </div>
       </div>
 
+      <!-- 6. E 玩法：俄羅斯輪盤 🔫 -->
       <div class="game-panel roulette-panel hidden" id="roulette-view">
         <div class="bank-header" style="width: 100%;">
           <div class="bank-title" style="color: #ff4757;">🔫 俄羅斯輪盤</div>
           <button class="back-btn" style="width: auto; padding: 0.4rem 1rem;" onclick="closePanel('roulette-view')">返回選單</button>
         </div>
+
         <div class="roulette-status-box">
           <div class="roulette-status-title">當前挑戰狀態</div>
           <div class="roulette-status-val" id="roulette-status-text">準備開始本輪遊戲 (彈匣: 1/6 子彈)</div>
         </div>
+
         <div class="roulette-gun-container">
           <div class="roulette-gun-icon" id="roulette-gun-icon">🔫</div>
         </div>
+
         <div class="roulette-actions">
           <button class="roulette-btn roulette-shoot-btn" id="roulette-shoot-btn" onclick="handleRouletteShoot()">扣動扳機 💥</button>
           <button class="roulette-btn roulette-stop-btn hidden" id="roulette-stop-btn" onclick="handleRouletteStop()">結束本輪 (領取獎勵) 💰</button>
         </div>
       </div>
 
+      <!-- 7. F 玩法：搖花骰 🎲 -->
       <div class="game-panel dice-panel hidden" id="dice-view">
         <div class="bank-header" style="width: 100%;">
           <div class="bank-title" style="color: #a55eea;">🎲 搖花骰</div>
           <button class="back-btn" style="width: auto; padding: 0.4rem 1rem;" onclick="closePanel('dice-view')">返回選單</button>
         </div>
+
         <div class="dice-options">
           <div style="font-size: 0.9rem; color: #aaa;">選擇骰子數量：</div>
           <div class="dice-count-select">
@@ -181,36 +227,45 @@
             <button class="dice-count-btn" id="dice-cnt-5" onclick="setDiceCount(5)">5 顆骰子</button>
           </div>
         </div>
+
         <div class="dice-display-area" id="dice-display-area">
           <div class="dice-box">?</div>
           <div class="dice-box">?</div>
         </div>
+
         <div style="font-size: 0.85rem; color: #aaa;">快捷選擇下注金額：</div>
         <div class="bet-grid-container" id="dice-chip-grid"></div>
+
         <div class="custom-bet-box">
           <input type="number" id="dice-custom-bet" class="bank-input" placeholder="自訂下注金額" min="1" oninput="onDiceCustomBetInput()">
           <div style="font-size: 0.9rem; color: #a55eea; font-weight: bold; min-width: 130px; text-align: right;" id="dice-win-prize-preview">預計勝獲：$0</div>
         </div>
+
         <button class="slot-spin-btn" id="dice-roll-btn" style="background: linear-gradient(180deg, #a55eea, #45aaf2); color: #fff;" onclick="rollDice()">開始搖骰！</button>
         <div id="dice-msg" class="slot-msg" style="color: #a55eea;">請選擇金額並開始遊戲</div>
       </div>
 
+      <!-- 8. G 玩法：21點 🃏 -->
       <div class="game-panel blackjack-panel hidden" id="bj-view">
         <div class="bank-header" style="width: 100%;">
           <div class="bank-title" style="color: #20bf6b;">🃏 21點 (Blackjack)</div>
           <button class="back-btn" style="width: auto; padding: 0.4rem 1rem;" onclick="closePanel('bj-view')">返回選單</button>
         </div>
+
         <div class="bj-area">
+          <!-- 莊家區域 -->
           <div>
             <div class="bj-hand-title">莊家牌面 (<span id="bj-dealer-score">?</span>)</div>
             <div class="bj-cards" id="bj-dealer-cards"></div>
           </div>
           <hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.1);">
+          <!-- 玩家區域 -->
           <div>
             <div class="bj-hand-title">你的牌面 (<span id="bj-player-score">0</span>)</div>
             <div class="bj-cards" id="bj-player-cards"></div>
           </div>
         </div>
+
         <div id="bj-bet-controls">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
             <div style="font-size: 0.85rem; color: #aaa;">選擇下注金額：</div>
@@ -222,30 +277,41 @@
             <button class="slot-spin-btn" style="width: 140px; padding: 0.7rem; background: #20bf6b; color:#fff;" onclick="startBlackjackGame()">發牌下注</button>
           </div>
         </div>
+
         <div id="bj-action-controls" class="hidden" style="display: flex; gap: 10px;">
           <button class="slot-spin-btn" style="background: #2ed573; color: #fff;" onclick="bjHit()">要牌 (Hit)</button>
           <button class="slot-spin-btn" style="background: #ff4757; color: #fff;" onclick="bjStand()">停牌 (Stand)</button>
         </div>
+
         <div id="bj-msg" class="slot-msg" style="color: #20bf6b;">請下注並開始比賽</div>
       </div>
 
+      <!-- 9. H 玩法：陽壽掏金 ⚰️ -->
       <div class="game-panel lifespan-panel hidden" id="lifespan-view">
         <div class="bank-header" style="width: 100%;">
           <div class="bank-title" style="color: #e1b12c;">⚰️ 陽壽掏金</div>
           <button class="back-btn" style="width: auto; padding: 0.4rem 1rem;" onclick="closePanel('lifespan-view')">返回選單</button>
         </div>
+
         <div style="font-size: 0.85rem; color: #aaa;">選擇或輸入下注金額以擺下 9 個寶箱：</div>
         <div class="bet-grid-container" id="lifespan-chip-grid"></div>
         <div class="custom-bet-box">
           <input type="number" id="lifespan-custom-bet" class="bank-input" placeholder="自訂下注金額" min="1" oninput="onLifespanCustomBetInput()">
           <button class="slot-spin-btn" id="lifespan-start-btn" style="width: 140px; padding: 0.7rem; background: #e1b12c; color:#000;" onclick="startLifespanGame()">開始下注</button>
         </div>
-        <div class="lifespan-boxes-grid" id="lifespan-boxes-grid"></div>
+
+        <!-- 9 個寶箱均勻分布區 -->
+        <div class="lifespan-boxes-grid" id="lifespan-boxes-grid">
+          <!-- 動態生成 9 個寶箱 -->
+        </div>
+
         <div id="lifespan-msg" class="slot-msg" style="color: #e1b12c;">請輸入下注金額並開始遊戲</div>
       </div>
 
     </div>
   </div>
+
+
 
   <script src="script.js"></script>
 </body>
